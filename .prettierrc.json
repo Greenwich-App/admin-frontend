@@ -1,0 +1,38 @@
+{
+	"editor.formatOnSave": false,
+	"useTabs": true,
+	"tabWidth": 4,
+	"singleAttributePerLine": false,
+	"printWidth": 120,
+	"overrides": [
+		{
+			"files": "*.vue",
+			"options": {
+				"useTabs": true,
+				"tabWidth": 4,
+				"singleQuote": false,
+				"bracketSameLine": false,
+				"vueIndentScriptAndStyle": false,
+				"singleAttributePerLine": false
+			}
+		},
+		{
+			"files": ["*.scss"],
+			"options": {
+				"useTabs": false,
+				"tabWidth": 4,
+				"singleQuote": false,
+				"bracketSpacing": true
+			}
+		},
+		{
+			"files": ["*.js", "*.ts", ".json"],
+			"options": {
+				"useTabs": false,
+				"tabWidth": 4,
+				"semi": true,
+				"bracketSpacing": false
+			}
+		}
+	]
+}

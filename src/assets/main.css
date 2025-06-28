@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	font-family: "Inter", sans-serif;
+}
+
+.link-active svg path,
+.link-active svg rect,
+.link-active svg circle,
+.link-active-settings svg circle,
+.link-active-settings svg path,
+.link-active-services svg path {
+	stroke: #060606;
+}
+
+.link-active-workshop svg circle,
+.link-active-workshop svg path,
+.link-active-services svg circle,
+.link-active-services svg path {
+	fill: #060606;
+}
+
+.active-badge {
+	background: #fff;
+}
+
+.tabs {
+	@apply flex list-none m-0 p-0 box-border;
+	box-shadow: inset 0 -1px 0 var(--bg-dark-yellow);
+	background-color: #fff;
+}
+
+.tab {
+	@apply w-[100px] text-base h-[50px] flex items-center justify-center cursor-pointer;
+	color: #999;
+}
+.tab:hover {
+	@apply text-black;
+}
+
+.tab.active {
+	color: #000;
+}
+
+.tab-content-box {
+	position: relative;
+	margin: 0;
+	padding: 0 20px;
+}
+.tab-content-box .tab-content [data-tab-content] {
+	display: none;
+}
+
+.tab-content-box .tab-content .active[data-tab-content] {
+	display: block;
+}
+
+.dropdown-options ul {
+	border: 1px solid #9F9F9F;
+	border-radius: 5px;
+}
+
+.dropdown-options ul li{
+	height: 40px;
+	padding: 10px;
+	border-top: 1px solid #9F9F9F;
+	display: flex;
+	align-items: center;
+}
+
+.dropdown-options ul li:first-child {
+	border-top: none;
+}
+
+.dropdown-options ul li:last-child {
+	border-bottom: none;
+}
