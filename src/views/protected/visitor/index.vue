@@ -11,8 +11,8 @@
                 <input type="text" class="w-[20%] h-[40px] px-3 border border-[#9F9F9F] text-sm" placeholder="Search...">
             </div>
 
-            <data-table :columns="['Name', 'Phone Number', 'Time In', 'Time Out', 'Block', 'Status']">
-                <template v-if="visitors.length > 0">
+            <data-table :columns="['Name', 'Phone Number', 'Time In', 'Block', 'Status']">
+                <template v-if="visitors && visitors.length > 0">
                     <tr class="bg-white hover:bg-light-yellow border-spacing-0 border-separate my-2.5"
                         v-for="(visitor, index) in visitors" :key="index">
                         
@@ -26,10 +26,6 @@
 
                         <td class="px-6 py-3 text-sm whitespace-nowrap">
                             {{ formatIsoToDateTime(visitor.timeIn) }}
-                        </td>
-
-                        <td class="px-6 py-3 text-sm whitespace-nowrap">
-                            {{ visitor.timeOut ? formatIsoToDateTime(visitor.timeOut) : '--' }}
                         </td>
 
                         <td class="px-6 py-3 text-sm whitespace-nowrap">
@@ -72,9 +68,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import DataTable from "@/components/UI/DataTable/DataTable.vue";
 import { formatIsoToDateTime } from "../../../helpers";
+import { allVisitorsService } from "../../../services";
 
 type Visitor = {
   id: number;
@@ -91,66 +88,25 @@ type Visitor = {
 
 const loading = ref(false);
 
-const visitors = ref<Visitor[]>([
-  {
-    id: 1,
-    name: "John Doe",
-    gender: "Male",
-    phone: "+2348011122233",
-    purpose: "Visit Resident",
-    visiting: "Adaeze Okafor",
-    block: "A1",
-    timeIn: "2025-06-04T09:30:00Z",
-    timeOut: "2025-06-04T11:00:00Z",
-    status: "expired"
-  },
-  {
-    id: 2,
-    name: "Grace Johnson",
-    gender: "Female",
-    phone: "+2348098765432",
-    purpose: "Delivery",
-    visiting: "Chinedu Obi",
-    block: "B2",
-    timeIn: "2025-06-04T10:00:00Z",
-    timeOut: null,
-    status: "active"
-  },
-  {
-    id: 3,
-    name: "Ibrahim Musa",
-    gender: "Male",
-    phone: "+2347034567890",
-    purpose: "Maintenance Work",
-    visiting: "Estate Office",
-    block: "Admin Block",
-    timeIn: "2025-06-04T08:15:00Z",
-    timeOut: "2025-06-04T09:45:00Z",
-    status: "expired"
-  },
-  {
-    id: 4,
-    name: "Linda Akpan",
-    gender: "Female",
-    phone: "+2348066677889",
-    purpose: "Visit Resident",
-    visiting: "Fatima Sani",
-    block: "C1",
-    timeIn: "2025-06-04T11:30:00Z",
-    timeOut: null,
-    status: "active"
-  },
-  {
-    id: 5,
-    name: "Samuel Ekene",
-    gender: "Male",
-    phone: "+2348123456789",
-    purpose: "Security Inspection",
-    visiting: "Entire Estate",
-    block: "All Blocks",
-    timeIn: "2025-06-04T07:00:00Z",
-    timeOut: "2025-06-04T10:30:00Z",
-    status: "expired"
+const visitors = ref<Visitor[]>([]);
+
+const fetchAllVisitors = async () => {
+  loading.value = true
+  try {
+    const response = await allVisitorsService();
+    loading.value = false
+    if(response.status == 'success') {
+        visitors.value = response.data.data;
+        console.log(response);
+    }
+    loading.value = false
+  } catch (e) {
+    loading.value = false
+    console.log(e)
   }
-]);
+}
+
+onMounted(() => {
+    fetchAllVisitors();
+})
 </script>

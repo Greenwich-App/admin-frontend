@@ -1,8 +1,9 @@
+import auth from '@/router/middleware/auth';
 export const protectedRoutes = [
     {
         path: "/",
         name: "Layout",
-        meta: {requiresAuth: true},
+        meta: { middleware: [auth] },
         component: () => import("@/components/UI/Layouts/Layout.vue"),
         children: [
             {
@@ -14,6 +15,16 @@ export const protectedRoutes = [
                 path: "/residents",
                 name: "Resident",
                 component: () => import("@/views/protected/resident/index.vue")
+            },
+            {
+                path: "/residence",
+                name: "Residence",
+                component: () => import("@/views/protected/residence/index.vue")
+            },
+            {
+                path: "/residence/:id",
+                name: "ResidenceDetails",
+                component: () => import("@/views/protected/residence/SingleResidence.vue")
             },
             {
                 path: "/visitors",
@@ -39,11 +50,6 @@ export const protectedRoutes = [
                 path: "/settings",
                 name: "Settings",
                 component: () => import("@/views/protected/settings/Index.vue")
-            },
-            {
-                path: "/communications",
-                name: "Communications",
-                component: () => import("@/views/protected/communication/Index.vue")
             },
             {
                 path: "/guards",

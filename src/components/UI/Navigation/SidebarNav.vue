@@ -31,6 +31,20 @@
 					</div>
 
 					<div class="mb-2.5">
+						<router-link to="/residence">
+							<div
+								class="flex items-center p-[10px] rounded-[4px] cursor-pointer font-medium"
+								:class="{ 'bg-green-light text-green-dark': '/residence' === $route.path }"
+							>
+								<span :class="{ 'link-active': '/' === $route.path }">
+									<i class="ri-home-2-fill"></i>
+								</span>
+								<p class="text-base ml-3">Residence</p>
+							</div>
+						</router-link>
+					</div>
+
+					<div class="mb-2.5">
 						<router-link to="/residents">
 							<div
 								class="flex items-center p-[10px] rounded-[4px] cursor-pointer font-medium"
@@ -102,20 +116,6 @@
 						</div>
 
 						<div class="mb-2.5">
-							<router-link to="/communications">
-								<div
-									class="flex items-center p-[10px] rounded-[4px] cursor-pointer font-medium"
-									:class="{ 'bg-green-light text-green-dark': '/communications' === $route.path }"
-								>
-									<span :class="{ 'link-active': '/communications' === $route.path }">
-										<i class="ri-speaker-fill"></i>
-									</span>
-									<p class="text-base ml-3">Communications</p>
-								</div>
-							</router-link>
-						</div>
-
-						<div class="mb-2.5">
 							<router-link to="/guards">
 								<div
 									class="flex items-center p-[10px] rounded-[4px] cursor-pointer font-medium"
@@ -165,7 +165,7 @@
 
 <script>
 import { ref, onMounted } from "vue";
-import { useAuthStore } from "../../../stores/auth";
+import { useUserStore } from "../../../stores/userStore";
 import { storeToRefs } from "pinia";
 export default {
 	name: "SidebarNav",
@@ -180,7 +180,7 @@ export default {
 	},
 	data() {},
 	setup() {
-		const { isSuperAdmin } = storeToRefs(useAuthStore());
+		const { isSuperAdmin } = storeToRefs(useUserStore());
 
 		return {
 			isSuperAdmin

@@ -10,3 +10,8 @@ export function formatIsoToDateTime(isoString: string): string {
   };
   return date.toLocaleString("en-US", options);
 }
+
+export const isValidEmail = (email: string) => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return regex.test(email)
+}

@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="mb-[32px]">
-            <h4 class="font-semibold text-lg">Residents</h4>
-            <p class="text-sm">Manage registered residents activities.</p>
+            <h4 class="font-semibold text-lg">Residence</h4>
+            <p class="text-sm">Manage registered residence.</p>
         </div>
 
         <div class="bg-white">
@@ -11,51 +11,39 @@
                 <input type="text" class="w-[20%] h-[40px] px-3 border border-[#9F9F9F] text-sm" placeholder="Search...">
             </div>
 
-            <data-table :columns="['Name', 'Phone Number', 'Email Address', 'Block', 'Status', 'Actions']">
-                <template v-if="allUsers.length > 0">
+            <data-table :columns="['Name', 'Type', 'Units Count', 'Actions']">
+                <template v-if="allResidents.length > 0">
                     <tr class="bg-white hover:bg-light-yellow border-spacing-0 border-separate my-2.5"
-                        v-for="(resident, index) in allUsers" :key="index">
+                        v-for="(resident, index) in allResidents" :key="index">
                         
                         <td class="px-6 py-3 text-sm whitespace-nowrap">
-                            {{ resident.first_name }} {{ resident.last_name }}
+                            {{ resident.name }}
                         </td>
 
                         <td class="px-6 py-3 text-sm whitespace-nowrap">
-                            {{ resident.phone }}
+                            {{ resident.type }}
                         </td>
 
                         <td class="px-6 py-3 text-sm whitespace-nowrap">
-                            {{ resident.email }}
-                        </td>
-
-                        <td class="px-6 py-3 text-sm whitespace-nowrap">
-                            {{ resident.unit.name }}
-                        </td>
-
-                        <td class="px-6 py-3 text-sm whitespace-nowrap">
-                            <span class="py-1 px-2 rounded-full text-xs" :class="{
-                                'bg-yellow-600 text-white': resident.status == 'pending',
-                                'bg-green-600 text-white': resident.status == 'approved',
-                                'bg-red-600 text-white': resident.status == 2
-                            }">{{ resident.status === 'pending' ? 'Pending' : resident.status === 'approved' ? 'Approved' : 'Rejected' }}</span>
+                            {{ resident.units_count }}
                         </td>
 
                         <td class="px-6 py-3 text-base whitespace-nowrap rounded-r-lg hover:cursor-pointer">
-                            <button class="mr-[10px] bg-green-600 px-2 py-1 rounded-[4px] text-white" v-if="resident.status == 'pending' || resident.status == 'rejected'" @click="approveUser(resident.id)">
+                            <!-- <button class="mr-[10px] bg-green-600 px-2 py-1 rounded-[4px] text-white" v-if="resident.status == 0 || resident.status == 2">
                                 <i class="ri-check-line text-base"></i>
-                            </button>
+                            </button> -->
 
-                            <button class="mr-[10px] bg-blue-600 px-2 py-1 rounded-[4px] text-white">
+                            <button class="mr-[10px] bg-blue-600 px-2 py-1 rounded-[4px] text-white" @click="router.push(`/residence/${resident.id}`)">
                                 <i class="ri-eye-line text-base"></i>
                             </button>
 
-                            <button class="mr-[10px] bg-yellow-600 px-2 py-1 rounded-[4px] text-white">
+                            <!-- <button class="mr-[10px] bg-yellow-600 px-2 py-1 rounded-[4px] text-white">
                                 <i class="ri-spam-2-line"></i>
                             </button>
 
                             <button class="mr-[10px] bg-red-600 px-2 py-1 rounded-[4px] text-white">
                                 <i class="ri-delete-bin-line text-base"></i>
-                            </button>
+                            </button> -->
                         </td>
                     </tr>
                 </template>
@@ -76,7 +64,7 @@
                                 <p class="">
                                     <i class="ri-close-circle-line text-[48px]"></i>
                                 </p>
-                                <p class="text-base font-medium">No resident found.</p>
+                                <p class="text-base font-medium">No residence found.</p>
                             </div>
                         </td>
                     </tr>
@@ -89,18 +77,30 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import DataTable from "@/components/UI/DataTable/DataTable.vue";
-import { allUsersService, approveUserService } from "../../../services";
+import { allResidentsService, getSingleResidenceService, getCurrentAdminService } from "../../../services";
+import { useRouter } from "vue-router";
 
+type Resident = {
+  id: number;
+  name: string;
+  gender: "Male" | "Female";
+  block: string;
+  phone: string;
+  email: string;
+  status: number;
+};
+
+const router = useRouter();
 const loading = ref(false);
 
-const allUsers = ref([]);
+const allResidents = ref<Resident[]>([]);
 
-const fetchAllUsers = async () => {
+const fetchAllResidents = async () => {
   loading.value = true
   try {
-    const response = await allUsersService();
+    const response = await allResidentsService();
     if(response.status == 'success') {
-        allUsers.value = response.data.data;
+        allResidents.value = response.data.data;
         console.log(response);
     }
     loading.value = false
@@ -110,12 +110,12 @@ const fetchAllUsers = async () => {
   }
 }
 
-const approveUser = async (id) => {
+const fetchSingleResident = async (id) => {
   loading.value = true
   try {
-    const response = await approveUserService(id);
+    const response = await getSingleResidenceService(id);
     if(response.status == 'success') {
-        allUsers.value = response.data.data;
+        // allResidents.value = response.data.data;
         console.log(response);
     }
     loading.value = false
@@ -126,7 +126,6 @@ const approveUser = async (id) => {
 }
 
 onMounted(() => {
-    console.log("Here");
-    fetchAllUsers();
+    fetchAllResidents();
 })
 </script>
