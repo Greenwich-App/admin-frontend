@@ -16,7 +16,7 @@ export const postAnnouncementService = async (id) => {
 };
 
 export const updateAnnouncementService = async (id, payload) => {
-  const {data} = await requestAxios.put(`/announcements/${id}`, payload);
+  const {data} = await requestAxios.patch(`/announcements/${id}`, payload);
   return data;
 };
 

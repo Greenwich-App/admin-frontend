@@ -228,6 +228,8 @@
 				</div>
 			</div>
 		</custom-modal>
+
+		<ConfirmDialog></ConfirmDialog>
 	</div>
 </template>
 
@@ -243,6 +245,9 @@ import {
 	removeSecurityService,
 } from "../../../services";
 import { toast, type ToastOptions } from "vue3-toastify";
+import { useConfirm } from "primevue/useconfirm";
+import ConfirmDialog from "primevue/confirmdialog";
+const confirm = useConfirm();
 
 interface Admin {
 	id?: number;

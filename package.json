@@ -10,6 +10,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@primeuix/themes": "^1.2.3",
     "@vuepic/vue-datepicker": "^9.0.1",
     "@vueuse/core": "^13.5.0",
     "apexcharts": "^3.43.0",
@@ -18,6 +19,7 @@
     "crypto-js": "^4.2.0",
     "datatables.net-vue3": "^2.0.0",
     "pinia": "^2.1.6",
+    "primevue": "^4.3.7",
     "remixicon": "^4.6.0",
     "vue": "^3.3.4",
     "vue-chartjs": "^5.2.0",

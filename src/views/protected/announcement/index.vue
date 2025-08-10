@@ -42,7 +42,7 @@
 							>
 								<option value="">--Select Priority--</option>
 								<option value="high">High</option>
-								<option value="mid">Medium</option>
+								<option value="medium">Medium</option>
 								<option value="low">Low</option>
 							</select>
 						</div>
@@ -101,26 +101,28 @@
 								{{ announcement.postedBy }}
 							</td>
 							<td class="px-6 py-3 text-sm whitespace-nowrap">
-								{{ formatDate(announcement.datePosted) }}
+								{{ formatIsoToDateTime(announcement.updated_at) }}
 							</td>
-							<td class="px-6 py-3 text-sm whitespace-nowrap">
+							<td class="px-6 py-3 text-sm whitespace-nowrap capitalize">
 								<span
 									:class="{
-										'text-red-600 font-bold': announcement.priority === 'High',
-										'text-yellow-600 font-bold': announcement.priority === 'Medium',
-										'text-green-600 font-bold': announcement.priority === 'Low',
+										'text-red-600 font-bold': announcement.priority === 'high',
+										'text-yellow-600 font-bold': announcement.priority === 'medium',
+										'text-green-600 font-bold': announcement.priority === 'low',
 									}"
 								>
 									{{ announcement.priority }}
 								</span>
 							</td>
-							<td class="px-6 py-3 text-sm whitespace-nowrap">
+							<td class="px-6 py-3 text-xs whitespace-nowrap capitalize">
 								<span
 									:class="{
-										'bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full':
-											announcement.status === 'Pending',
-										'bg-green-100 text-green-800 px-2 py-1 rounded-full':
-											announcement.status === 'Approved',
+										'bg-blue-600 text-white px-2 py-1 rounded-full':
+											announcement.status === 'draft',
+										'bg-yellow-600 text-white px-2 py-1 rounded-full':
+											announcement.status === 'pending',
+										'bg-green-600 text-white px-2 py-1 rounded-full':
+											announcement.status === 'posted',
 									}"
 								>
 									{{ announcement.status }}
@@ -134,18 +136,25 @@
 									<i class="ri-edit-2-fill"></i>
 								</button>
 								<button
-									class="bg-green-600 px-2 py-1 rounded-[4px] text-white"
-									v-if="announcement.status === 'Pending'"
-									@click="approveAnnouncement(announcement)"
+									class="bg-[#004225] px-2 py-1 rounded-[4px] text-white"
+									v-if="announcement.status === 'posted'"
+									@click="postAnnouncement(announcement.id)"
 								>
-									<i class="ri-check-line"></i>
+									<span
+										v-if="isPosting && selectedId == announcement.id"
+										class="animate-spin mr-2 inline-block w-4 h-4 border-2 border-t-transparent border-white rounded-full"
+									></span>
+									<i class="ri-send-plane-2-line" v-else></i>
 								</button>
 								<button
-									class="bg-[#004225] px-2 py-1 rounded-[4px] text-white"
-									v-if="announcement.status === 'Approved'"
-									@click="sendAnnouncement(announcement)"
+									class="bg-red-600 px-2 py-1 rounded-[4px] text-white"
+									@click="deleteAnnouncement(announcement.id)"
 								>
-									<i class="ri-send-plane-2-line"></i>
+									<span
+										v-if="isDeleting && selectedId == announcement.id"
+										class="animate-spin mr-2 inline-block w-4 h-4 border-2 border-t-transparent border-white rounded-full"
+									></span>
+									<i class="ri-delete-bin-line" v-else></i>
 								</button>
 							</td>
 						</tr>
@@ -177,6 +186,8 @@
 				</data-table>
 			</div>
 		</div>
+
+		<ConfirmDialog></ConfirmDialog>
 	</div>
 </template>
 
@@ -191,6 +202,10 @@ import {
 	postAnnouncementService,
 } from "../../../services";
 import { toast, type ToastOptions } from "vue3-toastify";
+import { formatIsoToDateTime } from "../../../helpers";
+import { useConfirm } from "primevue/useconfirm";
+import ConfirmDialog from "primevue/confirmdialog";
+const confirm = useConfirm();
 
 type Announcement = {
 	id?: number;
@@ -206,6 +221,9 @@ const formSuccess = ref(false);
 const formError = ref<string | null>(null);
 
 const announcements = ref<Announcement[]>([]);
+const isDeleting = ref(false);
+const selectedId = ref();
+const isPosting = ref(false);
 
 const form = ref<Announcement>({
 	title: "",
@@ -221,7 +239,6 @@ const fetchAllAnnouncement = async () => {
 		const response = await allAnnouncementService();
 		if (response.status == "success") {
 			announcements.value = response.data.data;
-			console.log(response);
 		}
 		loading.value = false;
 	} catch (e) {
@@ -239,11 +256,10 @@ const createAnnouncement = async () => {
 				autoClose: 1000,
 				position: toast.POSITION.TOP_RIGHT,
 			} as ToastOptions);
-			console.log(response);
 		}
 		submitting.value = false;
 		resetForm();
-        fetchAllAnnouncement();
+		fetchAllAnnouncement();
 	} catch (e) {
 		submitting.value = false;
 		console.log(e);
@@ -264,30 +280,31 @@ function editAnnouncement(announcement: Announcement) {
 	};
 }
 
-function updateAnnouncement() {
+async function updateAnnouncement() {
 	if (!editingAnnouncement.value) return;
 	submitting.value = true;
-	formSuccess.value = false;
-	formError.value = null;
-
-	resetForm();
+	try {
+		const response = await updateAnnouncementService(editingAnnouncement?.value?.id, form.value);
+		if (response.status == "success") {
+			toast.success(response.message, {
+				autoClose: 1000,
+				position: toast.POSITION.TOP_RIGHT,
+			} as ToastOptions);
+			fetchAllAnnouncement();
+		}
+		resetForm();
+		submitting.value = false;
+		formSuccess.value = false;
+		formError.value = null;
+	} catch (e) {
+		console.log(e);
+		submitting.value = false;
+	}
 }
 
 function cancelEdit() {
 	editingAnnouncement.value = null;
 	resetForm();
-}
-
-function approveAnnouncement(announcement: Announcement) {
-	const idx = announcements.value.findIndex((a) => a.id === announcement.id);
-	if (idx !== -1) {
-		announcements.value[idx].status = "Approved";
-	}
-}
-
-function sendAnnouncement(announcement: Announcement) {
-	// Simulate sending out to all individuals
-	alert(`Announcement "${announcement.title}" sent to all individuals.`);
 }
 
 function resetForm() {
@@ -299,10 +316,78 @@ function resetForm() {
 	};
 }
 
-function formatDate(date: string) {
-	if (!date) return "";
-	const d = new Date(date);
-	return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+function deleteAnnouncement(id) {
+	selectedId.value = id;
+	isDeleting.value = true;
+	confirm.require({
+		message: "Are you sure you want to delete this announcement?",
+		header: "Confirmation",
+		icon: "pi pi-exclamation-triangle",
+		rejectProps: {
+			severity: 'primary'
+		},
+		acceptProps: {
+			severity: 'danger',
+            text: true
+        },
+		accept: async () => {
+			try {
+				const response = await deleteAnnouncementService(id);
+				if (response.status == "success") {
+					toast.success(response.message, {
+						autoClose: 1000,
+						position: toast.POSITION.TOP_RIGHT,
+					} as ToastOptions);
+					fetchAllAnnouncement();
+				}
+				isDeleting.value = false;
+			} catch (e) {
+				selectedId.value = undefined;
+				console.log(e);
+				isDeleting.value = false;
+			}
+		},
+		reject: () => {
+			isDeleting.value = false;
+		},
+	});
+}
+
+function postAnnouncement(id) {
+	selectedId.value = id;
+	isPosting.value = true;
+	confirm.require({
+		message: "Are you sure you want to post this announcement?",
+		header: "Confirmation",
+		icon: "pi pi-exclamation-triangle",
+		rejectProps: {
+			severity: 'primary'
+		},
+		acceptProps: {
+			severity: 'danger',
+            text: true
+        },
+		accept: async () => {
+			try {
+				const response = await postAnnouncementService(id);
+				if (response.status == "success") {
+					toast.success(response.message, {
+						autoClose: 1000,
+						position: toast.POSITION.TOP_RIGHT,
+					} as ToastOptions);
+					fetchAllAnnouncement();
+				}
+				isPosting.value = false;
+			} catch (e) {
+				selectedId.value = undefined;
+				console.log(e);
+				isPosting.value = false;
+			}
+		},
+		reject: () => {
+			isPosting.value = false;
+		},
+	});
 }
 
 onMounted(() => {

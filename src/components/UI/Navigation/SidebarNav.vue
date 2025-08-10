@@ -116,20 +116,6 @@
 						</div>
 
 						<div class="mb-2.5">
-							<router-link to="/guards">
-								<div
-									class="flex items-center p-[10px] rounded-[4px] cursor-pointer font-medium"
-									:class="{ 'bg-green-light text-green-dark': '/guards' === $route.path }"
-								>
-									<span :class="{ 'link-active': '/guards' === $route.path }">
-										<i class="ri-shield-star-fill"></i>
-									</span>
-									<p class="text-base ml-3">Guards</p>
-								</div>
-							</router-link>
-						</div>
-
-						<div class="mb-2.5">
 							<router-link to="/settings">
 								<div
 									class="flex items-center p-[10px] rounded-[4px] cursor-pointer font-medium"
