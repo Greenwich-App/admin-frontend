@@ -67,7 +67,7 @@ import { ref } from "vue";
 import { isValidEmail } from "@/helpers";
 import { storeToRefs } from "pinia";
 import { loginService, verify2FAService } from "@/services";
-import { useUserStore } from "@/stores/UserStore";
+import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "vue-router";
 import { getCurrentAdminService } from "../../../services";
 
