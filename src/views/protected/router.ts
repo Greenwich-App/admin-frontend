@@ -51,11 +51,6 @@ export const protectedRoutes = [
                 name: "Settings",
                 component: () => import("@/views/protected/settings/Index.vue")
             },
-            {
-                path: "/guards",
-                name: "Guards",
-                component: () => import("@/views/protected/guards/Index.vue")
-            }
         ],
     },
 ];
