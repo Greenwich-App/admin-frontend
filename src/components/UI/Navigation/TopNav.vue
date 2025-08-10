@@ -31,12 +31,12 @@
 					v-if="isUserModal"
 				>
 					<ul>
-						<li
+						<!-- <li
 							class="h-[40px] flex items-center text-sm cursor-pointer px-5 hover:cursor-pointer hover:bg-gray-100"
 							@click="handleMenuSelect('settings')"
 						>
 							settings
-						</li>
+						</li> -->
 						<li
 							class="h-[40px] flex items-center text-sm cursor-pointer hover:cursor-pointer text-red-500 px-5 hover:bg-gray-100"
 							@click="handleMenuSelect('logout')"

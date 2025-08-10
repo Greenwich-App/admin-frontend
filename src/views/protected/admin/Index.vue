@@ -310,6 +310,7 @@ const addMember = async () => {
 				position: toast.POSITION.TOP_RIGHT,
 			} as ToastOptions);
 			console.log(response);
+			showAddMemberModal.value = false;
 		}
 		adding.value = false;
 		fetchAllAdmin();
@@ -367,6 +368,7 @@ const deleteAdmin = async () => {
 				position: toast.POSITION.TOP_RIGHT,
 			} as ToastOptions);
 			console.log(response);
+			showDeleteAdminModal.value = false;
 		}
 		deleting.value = false;
 		fetchAllAdmin();

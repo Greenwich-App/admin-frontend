@@ -115,7 +115,7 @@
 							</router-link>
 						</div>
 
-						<div class="mb-2.5">
+						<!-- <div class="mb-2.5">
 							<router-link to="/settings">
 								<div
 									class="flex items-center p-[10px] rounded-[4px] cursor-pointer font-medium"
@@ -127,7 +127,7 @@
 									<p class="text-base ml-3">Settings</p>
 								</div>
 							</router-link>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>

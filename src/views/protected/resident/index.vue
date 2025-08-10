@@ -41,9 +41,9 @@
                         </td>
 
                         <td class="px-6 py-3 text-base whitespace-nowrap rounded-r-lg hover:cursor-pointer">
-                            <button class="mr-[10px] bg-green-600 px-2 py-1 rounded-[4px] text-white" v-if="resident.status == 'pending' || resident.status == 'rejected'" @click="approveUser(resident.id)">
+                            <!-- <button class="mr-[10px] bg-green-600 px-2 py-1 rounded-[4px] text-white" v-if="resident.status == 'pending' || resident.status == 'rejected'" @click="approveUser(resident.id)">
                                 <i class="ri-check-line text-base"></i>
-                            </button>
+                            </button> -->
 
                             <button class="mr-[10px] bg-blue-600 px-2 py-1 rounded-[4px] text-white">
                                 <i class="ri-eye-line text-base"></i>

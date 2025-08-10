@@ -46,11 +46,11 @@ export const protectedRoutes = [
                 name: "AuditLogs",
                 component: () => import("@/views/protected/audit-log/Index.vue")
             },
-            {
-                path: "/settings",
-                name: "Settings",
-                component: () => import("@/views/protected/settings/Index.vue")
-            },
+            // {
+            //     path: "/settings",
+            //     name: "Settings",
+            //     component: () => import("@/views/protected/settings/Index.vue")
+            // },
         ],
     },
 ];
